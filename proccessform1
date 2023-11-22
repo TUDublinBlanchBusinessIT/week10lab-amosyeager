@@ -1,0 +1,24 @@
+<?php
+
+session_start();
+
+
+$passengerFN = isset($_POST['passengerFN']) ? $_POST['passengerFN'] : '';
+$passengerSN = isset($_POST['passengerSN']) ? $_POST['passengerSN'] : '';
+$luggage = isset($_POST['luggage']) ? 1 : 0;
+
+
+$_SESSION['passengerFN'] = $passengerFN;
+$_SESSION['passengerSN'] = $passengerSN;
+$_SESSION['luggage'] = $luggage;
+
+if ($luggage == 1) {
+// Redirect to the luggage.html page
+header("Location: luggage.html");
+exit();
+} else {
+
+header("Location: finalStep.php");
+exit();
+}
+?>
