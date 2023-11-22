@@ -1,35 +1,32 @@
 <?php
+
 session_start();
-if (!isset($_POST['confirm'])) {
-    header("Location: flightBooking.html");
-}
-$fn = $_SESSION['passengerFN'];
-$sn = $_SESSION['passengerSN'];
-if ($_SESSION['luggage']=='1') {
-    $subTenKG = $_SESSION['subTenKG'];
-    $overTenKG = $_SESSION['overTenKG'];
-}
-else {
-    $subTenKG = 0;
-    $overTenKG = 0;
-}
+
+
+if (isset($_POST['confirm'])) {
     
-include("dbcon.php");
-$sql = "insert into flightbooking(firstname,surname,bagsUnderTenKG,bagsOverTenKG) values ";
+    $firstname = $_SESSION['passengerFN'];
+    $surname = $_SESSION['passengerSN'];
+    $bagsUnderTenKG = isset($_SESSION['subTenKG']) ? $_SESSION['subTenKG'] : 0;
+    $bagsOverTenKG = isset($_SESSION['overTenKG']) ? $_SESSION['overTenKG'] : 0;
 
-$sql .= "('$fn','$sn','1','1')";
+   
+    $mysqli = new mysqli("localhost", "root", "", "bookflight");
 
-//echo $sql;
+    
+    if ($mysqli->connect_error) {
+        die("Connection failed: " . $mysqli->connect_error);
+    }
 
 
-if (mysqli_query($conn, $sql)) {
-  echo "Your flight booking was created successfully";
-} else {
-  echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+    $sql = "INSERT INTO flightbooking (firstname, surname, bagsUnderTenKG, bagsOverTenKG) VALUES ('$firstname', '$surname', '$bagsUnderTenKG', '$bagsOverTenKG')";
+    
+    if ($mysqli->query($sql) === TRUE) {
+        echo "Record inserted successfully";
+    } else {
+        echo "Error: " . $sql . "<br>" . $mysqli->error;
+    }
+
+    $mysqli->close();
 }
-
-mysqli_close($conn);
-
-session_destroy();
-
 ?>
